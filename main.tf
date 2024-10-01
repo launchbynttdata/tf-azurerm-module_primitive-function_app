@@ -10,22 +10,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-resource "azurerm_storage_account" "sa" {
+data "azurerm_storage_account" "sa" {
   name                = var.storage_account_name
   resource_group_name = var.resource_group_name
-  location            = var.location
-
-  account_replication_type = var.storage_account_replication_type
-  account_tier             = var.storage_account_tier
 }
 
-resource "azurerm_service_plan" "asp" {
+data "azurerm_service_plan" "asp" {
   name                = var.service_plan_name
   resource_group_name = var.resource_group_name
-  location            = var.location
-
-  os_type  = "Linux"
-  sku_name = var.sku
 }
 
 resource "azurerm_linux_function_app" "func" {
@@ -46,9 +38,9 @@ resource "azurerm_linux_function_app" "func" {
 
   https_only = var.https_only
 
-  service_plan_id = azurerm_service_plan.asp.id
+  service_plan_id = data.azurerm_service_plan.asp.id
 
-  storage_account_name          = azurerm_storage_account.sa.name
+  storage_account_name          = data.azurerm_storage_account.sa.name
   storage_uses_managed_identity = true
 
   site_config {
@@ -103,10 +95,4 @@ resource "azurerm_linux_function_app" "func" {
       }
     }
   }
-}
-
-resource "azurerm_role_assignment" "func_sa_access" {
-  scope                = azurerm_storage_account.sa.id
-  principal_id         = azurerm_linux_function_app.func.identity[0].principal_id
-  role_definition_name = "Storage Blob Data Contributor"
 }

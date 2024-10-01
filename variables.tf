@@ -35,24 +35,6 @@ variable "location" {
   type        = string
 }
 
-variable "storage_account_tier" {
-  description = "The Tier to use for this storage account"
-  type        = string
-  default     = "Standard"
-}
-
-variable "storage_account_replication_type" {
-  description = "The Replication Type to use for this storage account"
-  type        = string
-  default     = "LRS"
-}
-
-variable "sku" {
-  description = "The SKU for the function app hosting plan"
-  type        = string
-  default     = "Y1"
-}
-
 variable "app_settings" {
   description = "Environment variables to set on the function app"
   type        = map(string)

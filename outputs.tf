@@ -29,23 +29,3 @@ output "principal_id" {
   description = "The principal ID of the function app"
   value       = azurerm_linux_function_app.func.identity[0].principal_id
 }
-
-output "service_plan_name" {
-  description = "The name of the service plan"
-  value       = azurerm_service_plan.asp.name
-}
-
-output "service_plan_id" {
-  description = "The ID of the service plan"
-  value       = azurerm_service_plan.asp.id
-}
-
-output "storage_account_name" {
-  description = "The name of the storage account"
-  value       = azurerm_storage_account.sa.name
-}
-
-output "storage_account_id" {
-  description = "The ID of the storage account"
-  value       = azurerm_storage_account.sa.id
-}

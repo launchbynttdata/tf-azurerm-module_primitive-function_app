@@ -108,7 +108,7 @@ If `make check` target is successful, developer is good to commit the code to pr
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0, <= 1.5.5 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.5 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~>3.113 |
 
 ## Providers
@@ -126,9 +126,8 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_linux_function_app.func](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_function_app) | resource |
-| [azurerm_role_assignment.func_sa_access](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
-| [azurerm_service_plan.asp](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/service_plan) | resource |
-| [azurerm_storage_account.sa](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account) | resource |
+| [azurerm_service_plan.asp](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/service_plan) | data source |
+| [azurerm_storage_account.sa](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account) | data source |
 
 ## Inputs
 
@@ -139,9 +138,6 @@ No modules.
 | <a name="input_storage_account_name"></a> [storage\_account\_name](#input\_storage\_account\_name) | Name of the storage account to create | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | name of the resource group where the function app will be created | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Location where the function app will be created | `string` | n/a | yes |
-| <a name="input_storage_account_tier"></a> [storage\_account\_tier](#input\_storage\_account\_tier) | The Tier to use for this storage account | `string` | `"Standard"` | no |
-| <a name="input_storage_account_replication_type"></a> [storage\_account\_replication\_type](#input\_storage\_account\_replication\_type) | The Replication Type to use for this storage account | `string` | `"LRS"` | no |
-| <a name="input_sku"></a> [sku](#input\_sku) | The SKU for the function app hosting plan | `string` | `"Y1"` | no |
 | <a name="input_app_settings"></a> [app\_settings](#input\_app\_settings) | Environment variables to set on the function app | `map(string)` | `{}` | no |
 | <a name="input_functions_extension_version"></a> [functions\_extension\_version](#input\_functions\_extension\_version) | The version of the Azure Functions runtime to use | `string` | `"~4"` | no |
 | <a name="input_https_only"></a> [https\_only](#input\_https\_only) | If true, the function app will only accept HTTPS requests | `bool` | `true` | no |
@@ -157,8 +153,4 @@ No modules.
 | <a name="output_function_app_name"></a> [function\_app\_name](#output\_function\_app\_name) | The name of the function app |
 | <a name="output_function_app_id"></a> [function\_app\_id](#output\_function\_app\_id) | The ID of the function app |
 | <a name="output_principal_id"></a> [principal\_id](#output\_principal\_id) | The principal ID of the function app |
-| <a name="output_service_plan_name"></a> [service\_plan\_name](#output\_service\_plan\_name) | The name of the service plan |
-| <a name="output_service_plan_id"></a> [service\_plan\_id](#output\_service\_plan\_id) | The ID of the service plan |
-| <a name="output_storage_account_name"></a> [storage\_account\_name](#output\_storage\_account\_name) | The name of the storage account |
-| <a name="output_storage_account_id"></a> [storage\_account\_id](#output\_storage\_account\_id) | The ID of the storage account |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

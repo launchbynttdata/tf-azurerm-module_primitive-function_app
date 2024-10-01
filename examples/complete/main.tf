@@ -35,6 +35,40 @@ module "resource_group" {
   tags = merge(var.tags, { resource_name = module.resource_names["resource_group"].standard })
 }
 
+module "storage_account" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/storage_account/azurerm"
+  version = "~> 1.0"
+
+  storage_account_name = local.storage_account_name
+  resource_group_name  = module.resource_group.name
+
+  location = var.location
+
+  account_tier             = var.storage_account_tier
+  account_replication_type = var.storage_account_replication_type
+
+  tags = merge(var.tags, { resource_name = module.resource_names["storage_account"].standard })
+
+  depends_on = [module.resource_group]
+}
+
+module "app_service_plan" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/app_service_plan/azurerm"
+  version = "~> 1.0"
+
+  name                = local.service_plan_name
+  resource_group_name = module.resource_group.name
+
+  os_type = "Linux"
+
+  location = var.location
+  sku_name = var.sku
+
+  tags = merge(var.tags, { resource_name = module.resource_names["service_plan"].standard })
+
+  depends_on = [module.resource_group]
+}
+
 module "function_app" {
   source = "../.."
 
@@ -45,11 +79,6 @@ module "function_app" {
   location            = var.location
   resource_group_name = module.resource_group.name
 
-  sku = var.sku
-
-  storage_account_tier             = var.storage_account_tier
-  storage_account_replication_type = var.storage_account_replication_type
-
   app_settings                = var.app_settings
   functions_extension_version = var.functions_extension_version
   https_only                  = var.https_only
@@ -59,5 +88,16 @@ module "function_app" {
 
   tags = merge(var.tags, { resource_name = module.resource_names["function_app"].standard })
 
-  depends_on = [module.resource_group]
+  depends_on = [module.resource_group, module.storage_account, module.app_service_plan]
+}
+
+module "role_assignment" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm"
+  version = "~> 1.0"
+
+  scope                = module.storage_account.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = module.function_app.principal_id
+
+  depends_on = [module.function_app]
 }

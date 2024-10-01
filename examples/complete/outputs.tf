@@ -23,19 +23,14 @@ output "function_app_id" {
 }
 
 output "service_plan_name" {
-  value = module.function_app.service_plan_name
+  value = module.app_service_plan.name
 }
 
 output "service_plan_id" {
-  value = module.function_app.service_plan_id
-}
-
-output "storage_account_name" {
-  description = "The name of the storage account"
-  value       = module.function_app.storage_account_name
+  value = module.app_service_plan.id
 }
 
 output "storage_account_id" {
-  description = "The ID of the storage account"
-  value       = module.function_app.storage_account_id
+  description = "The id of the storage account"
+  value       = module.storage_account.id
 }

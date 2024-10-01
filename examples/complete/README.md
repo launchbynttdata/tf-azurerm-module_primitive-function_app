@@ -5,7 +5,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.0, <= 1.5.5 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.5 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~>3.113 |
 
 ## Providers
@@ -18,7 +18,10 @@ No providers.
 |------|--------|---------|
 | <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | terraform.registry.launch.nttdata.com/module_library/resource_name/launch | ~> 1.0 |
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.0 |
+| <a name="module_storage_account"></a> [storage\_account](#module\_storage\_account) | terraform.registry.launch.nttdata.com/module_primitive/storage_account/azurerm | ~> 1.0 |
+| <a name="module_app_service_plan"></a> [app\_service\_plan](#module\_app\_service\_plan) | terraform.registry.launch.nttdata.com/module_primitive/app_service_plan/azurerm | ~> 1.0 |
 | <a name="module_function_app"></a> [function\_app](#module\_function\_app) | ../.. | n/a |
+| <a name="module_role_assignment"></a> [role\_assignment](#module\_role\_assignment) | terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm | ~> 1.0 |
 
 ## Resources
 
@@ -54,6 +57,5 @@ No resources.
 | <a name="output_function_app_id"></a> [function\_app\_id](#output\_function\_app\_id) | n/a |
 | <a name="output_service_plan_name"></a> [service\_plan\_name](#output\_service\_plan\_name) | n/a |
 | <a name="output_service_plan_id"></a> [service\_plan\_id](#output\_service\_plan\_id) | n/a |
-| <a name="output_storage_account_name"></a> [storage\_account\_name](#output\_storage\_account\_name) | The name of the storage account |
-| <a name="output_storage_account_id"></a> [storage\_account\_id](#output\_storage\_account\_id) | The ID of the storage account |
+| <a name="output_storage_account_id"></a> [storage\_account\_id](#output\_storage\_account\_id) | The id of the storage account |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
