@@ -33,5 +33,5 @@ func TestFunctionAppModule(t *testing.T) {
 		SetTestConfigFileName(infraTFVarFileNameDefault).
 		Build()
 
-	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestFunctionApp)
+	lib.RunNonDestructiveTest(t, *ctx, testimpl.TestFunctionApp)
 }
