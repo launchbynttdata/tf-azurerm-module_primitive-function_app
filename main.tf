@@ -47,6 +47,8 @@ resource "azurerm_linux_function_app" "func" {
     always_on                                     = lookup(var.site_config, "always_on", null)
     app_command_line                              = lookup(var.site_config, "app_command_line", null)
     app_scale_limit                               = lookup(var.site_config, "app_scale_limit", null)
+    application_insights_connection_string        = lookup(var.site_config, "application_insights_connection_string", null)
+    application_insights_key                      = lookup(var.site_config, "application_insights_key", null)
     container_registry_use_managed_identity       = lookup(var.site_config, "container_registry_use_managed_identity", null)
     container_registry_managed_identity_client_id = lookup(var.site_config, "container_registry_managed_identity_client_id", null)
     health_check_path                             = lookup(var.site_config, "health_check_path", null)
