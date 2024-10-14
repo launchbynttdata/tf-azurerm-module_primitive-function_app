@@ -59,6 +59,8 @@ variable "site_config" {
       always_on        = If this Linux Web App is Always On enabled. Defaults to false.
       app_command_line = The App command line to launch.
       app_scale_limit  = The number of workers this function app can scale out to. Only applicable to apps on the Consumption and Premium plan.
+      application_insights_connection_string = The connection string of the Application Insights instance to use.
+      application_insights_key               = The key of the Application Insights instance to use.
       application_stack = optional(object({
         docker = optional(object({
           image_name        = The name of the Docker image to use.
@@ -91,9 +93,11 @@ variable "site_config" {
     })
   EOF
   type = object({
-    always_on        = optional(bool)
-    app_command_line = optional(string)
-    app_scale_limit  = optional(number)
+    always_on                              = optional(bool)
+    app_command_line                       = optional(string)
+    app_scale_limit                        = optional(number)
+    application_insights_connection_string = optional(string)
+    application_insights_key               = optional(string)
     application_stack = optional(object({
       docker = optional(object({
         image_name        = string
