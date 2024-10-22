@@ -144,6 +144,12 @@ variable "https_only" {
   default     = true
 }
 
+variable "public_network_access_enabled" {
+  description = "If true, the function app will be accessible from the public internet"
+  type        = bool
+  default     = true
+}
+
 variable "site_config" {
   description = <<-EOF
     object({

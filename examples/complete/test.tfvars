@@ -16,3 +16,4 @@ logical_product_family  = "launch"
 logical_product_service = "funcapp"
 class_env               = "gotest"
 location                = "eastus"
+public_network_access_enabled = false

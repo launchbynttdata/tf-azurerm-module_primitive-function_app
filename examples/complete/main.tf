@@ -78,6 +78,7 @@ module "function_app" {
 
   location            = var.location
   resource_group_name = module.resource_group.name
+  public_network_access_enabled = var.public_network_access_enabled
 
   app_settings                = var.app_settings
   functions_extension_version = var.functions_extension_version
