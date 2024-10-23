@@ -76,8 +76,8 @@ module "function_app" {
   service_plan_name    = local.service_plan_name
   storage_account_name = local.storage_account_name
 
-  location            = var.location
-  resource_group_name = module.resource_group.name
+  location                      = var.location
+  resource_group_name           = module.resource_group.name
   public_network_access_enabled = var.public_network_access_enabled
 
   app_settings                = var.app_settings
