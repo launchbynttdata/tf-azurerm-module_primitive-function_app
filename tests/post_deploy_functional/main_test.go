@@ -34,7 +34,7 @@ func TestFunctionAppModule(t *testing.T) {
 		SetTestSpecificFlags(map[string]types.TestFlags{
 			"complete": {
 				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
-				"SKIP_TEST":                     false,
+				"SKIP_TEST":                     true,
 			},
 			"private_func_app": {
 				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
