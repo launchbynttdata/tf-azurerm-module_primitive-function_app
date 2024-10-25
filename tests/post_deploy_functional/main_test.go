@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	testConfigsExamplesFolderDefault = "../../examples/complete"
+	testConfigsExamplesFolderDefault = "../../examples"
 	infraTFVarFileNameDefault        = "test.tfvars"
 )
 
@@ -31,7 +31,17 @@ func TestFunctionAppModule(t *testing.T) {
 		SetTestConfig(&testimpl.ThisTFModuleConfig{}).
 		SetTestConfigFolderName(testConfigsExamplesFolderDefault).
 		SetTestConfigFileName(infraTFVarFileNameDefault).
+		SetTestSpecificFlags(map[string]types.TestFlags{
+			"complete": {
+				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
+				"SKIP_TEST":                     true,
+			},
+			"private_func_app": {
+				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
+				"SKIP_TEST":                     false,
+			},
+		}).
 		Build()
 
-	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestFunctionApp)
+	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestFunctionApp, testimpl.TestPrivateFuncApp)
 }

@@ -35,6 +35,102 @@ module "resource_group" {
   tags = merge(var.tags, { resource_name = module.resource_names["resource_group"].standard })
 }
 
+
+module "virtual_network" {
+  source  = "terraform.registry.launch.nttdata.com/module_primitive/virtual_network/azurerm"
+  version = "~> 3.0"
+
+  vnet_name           = local.virtual_network_name
+  address_space       = var.address_space
+  resource_group_name = module.resource_group.name
+  vnet_location       = var.location
+  subnets             = var.subnets
+
+  depends_on = [module.resource_group]
+
+}
+
+resource "azurerm_network_security_group" "nsg" {
+  location            = var.location
+  name                = "func-app-nsg"
+  resource_group_name = module.resource_group.name
+
+  security_rule {
+    name                       = "AllowFunctionAppAccess"
+    priority                   = 100
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "AllowHTTPS"
+    priority                   = 110
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  depends_on = [module.resource_group]
+}
+
+resource "azurerm_subnet_network_security_group_association" "nsg_association" {
+  subnet_id                 = module.virtual_network.subnet_name_id_map["subnet1"]
+  network_security_group_id = azurerm_network_security_group.nsg.id
+
+  depends_on = [module.resource_group]
+}
+
+resource "azurerm_private_endpoint" "private_endpoint" {
+  location            = var.location
+  name                = "function-app-private-endpoint"
+  resource_group_name = module.resource_group.name
+  subnet_id           = module.virtual_network.subnet_name_id_map["subnet1"]
+
+  private_service_connection {
+    is_manual_connection           = false
+    name                           = "functionAppConnection"
+    private_connection_resource_id = module.function_app.function_app_id
+    subresource_names              = ["sites"]
+
+  }
+
+  depends_on = [module.resource_group]
+}
+resource "azurerm_private_dns_zone" "dns_zone" {
+  name                = "privatelink.azurewebsites.net"
+  resource_group_name = module.resource_group.name
+
+  depends_on = [module.resource_group]
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "dns_vnet_link" {
+  name                  = "vnetlink"
+  resource_group_name   = module.resource_group.name
+  private_dns_zone_name = azurerm_private_dns_zone.dns_zone.name
+  virtual_network_id    = module.virtual_network.vnet_id
+
+  depends_on = [module.resource_group]
+}
+
+resource "azurerm_private_dns_a_record" "dns_a_record" {
+  name                = module.function_app.function_app_name
+  records             = [azurerm_private_endpoint.private_endpoint.private_service_connection[0].private_ip_address]
+  resource_group_name = module.resource_group.name
+  ttl                 = 300
+  zone_name           = azurerm_private_dns_zone.dns_zone.name
+
+  depends_on = [module.resource_group]
+}
+
 module "storage_account" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/storage_account/azurerm"
   version = "~> 1.0"
@@ -90,6 +186,8 @@ module "function_app" {
   tags = merge(var.tags, { resource_name = module.resource_names["function_app"].standard })
 
   depends_on = [module.resource_group, module.storage_account, module.app_service_plan]
+
+
 }
 
 module "role_assignment" {

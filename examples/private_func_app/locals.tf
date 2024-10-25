@@ -10,10 +10,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-instance_env                  = 0
-instance_resource             = 0
-logical_product_family        = "launch"
-logical_product_service       = "funcapp"
-class_env                     = "gotest"
-location                      = "eastus"
-public_network_access_enabled = true
+locals {
+  resource_group_name  = module.resource_names["resource_group"].minimal_random_suffix
+  function_app_name    = module.resource_names["function_app"].minimal_random_suffix
+  service_plan_name    = module.resource_names["service_plan"].minimal_random_suffix
+  storage_account_name = module.resource_names["storage_account"].minimal_random_suffix_without_any_separators
+  virtual_network_name = module.resource_names["virtual_network"].minimal_random_suffix
+
+}

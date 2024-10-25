@@ -38,7 +38,8 @@ resource "azurerm_linux_function_app" "func" {
 
   https_only = var.https_only
 
-  service_plan_id = data.azurerm_service_plan.asp.id
+  service_plan_id               = data.azurerm_service_plan.asp.id
+  public_network_access_enabled = var.public_network_access_enabled
 
   storage_account_name          = data.azurerm_storage_account.sa.name
   storage_uses_managed_identity = true

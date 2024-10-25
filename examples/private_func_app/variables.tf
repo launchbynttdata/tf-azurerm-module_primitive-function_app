@@ -10,29 +10,124 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-variable "function_app_name" {
-  description = "Name of the function app to create"
-  type        = string
+variable "resource_names_map" {
+  description = "A map of key to resource_name that will be used by tf-launch-module_library-resource_name to generate resource names"
+  type = map(object({
+    name       = string
+    max_length = optional(number, 60)
+  }))
+
+  default = {
+    function_app = {
+      name       = "func"
+      max_length = 60
+    }
+    storage_account = {
+      name       = "sa"
+      max_length = 24
+    }
+    service_plan = {
+      name       = "asp"
+      max_length = 60
+    }
+    resource_group = {
+      name       = "rg"
+      max_length = 60
+    }
+    virtual_network = {
+      name       = "funcapp"
+      max_length = 60
+    }
+  }
 }
 
-variable "service_plan_name" {
-  description = "Name of the service plan to create"
-  type        = string
+variable "instance_env" {
+  type        = number
+  description = "Number that represents the instance of the environment."
+  default     = 0
+
+  validation {
+    condition     = var.instance_env >= 0 && var.instance_env <= 999
+    error_message = "Instance number should be between 0 to 999."
+  }
 }
 
-variable "storage_account_name" {
-  description = "Name of the storage account to create"
-  type        = string
+variable "instance_resource" {
+  type        = number
+  description = "Number that represents the instance of the resource."
+  default     = 0
+
+  validation {
+    condition     = var.instance_resource >= 0 && var.instance_resource <= 100
+    error_message = "Instance number should be between 0 to 100."
+  }
 }
 
-variable "resource_group_name" {
-  description = "name of the resource group where the function app will be created"
+variable "logical_product_family" {
   type        = string
+  description = <<EOF
+    (Required) Name of the product family for which the resource is created.
+    Example: org_name, department_name.
+  EOF
+  nullable    = false
+
+  validation {
+    condition     = can(regex("^[_\\-A-Za-z0-9]+$", var.logical_product_family))
+    error_message = "The variable must contain letters, numbers, -, _, and .."
+  }
+
+  default = "launch"
+}
+
+variable "logical_product_service" {
+  type        = string
+  description = <<EOF
+    (Required) Name of the product service for which the resource is created.
+    For example, backend, frontend, middleware etc.
+  EOF
+  nullable    = false
+
+  validation {
+    condition     = can(regex("^[_\\-A-Za-z0-9]+$", var.logical_product_service))
+    error_message = "The variable must contain letters, numbers, -, _, and .."
+  }
+
+  default = "func"
+}
+
+variable "class_env" {
+  type        = string
+  description = "(Required) Environment where resource is going to be deployed. For example. dev, qa, uat"
+  nullable    = false
+  default     = "dev"
+
+  validation {
+    condition     = length(regexall("\\b \\b", var.class_env)) == 0
+    error_message = "Spaces between the words are not allowed."
+  }
 }
 
 variable "location" {
   description = "Location where the function app will be created"
   type        = string
+}
+
+variable "storage_account_tier" {
+  description = "The Tier to use for this storage account"
+  type        = string
+  default     = "Standard"
+}
+
+variable "storage_account_replication_type" {
+  description = "The Replication Type to use for this storage account"
+  type        = string
+  default     = "LRS"
+}
+
+variable "sku" {
+  description = "The SKU for the function app hosting plan"
+  type        = string
+  default     = "Y1"
 }
 
 variable "app_settings" {
@@ -143,5 +238,30 @@ variable "identity_ids" {
 
 variable "tags" {
   type    = map(string)
+  default = {}
+}
+
+## variables for virtual network
+
+variable "address_space" {
+  type        = list(string)
+  default     = ["10.6.0.0/16"]
+  description = "The address space that is used by the virtual network."
+}
+
+variable "subnets" {
+  description = "A mapping of subnet names to their configurations."
+  type = map(object({
+    prefix = string
+    delegation = optional(map(object({
+      service_name    = string
+      service_actions = list(string)
+    })), {})
+    service_endpoints                             = optional(list(string), []),
+    private_endpoint_network_policies_enabled     = optional(bool, false)
+    private_link_service_network_policies_enabled = optional(bool, false)
+    network_security_group_id                     = optional(string, null)
+    route_table_id                                = optional(string, null)
+  }))
   default = {}
 }
