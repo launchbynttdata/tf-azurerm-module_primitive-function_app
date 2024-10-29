@@ -145,3 +145,9 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "os_type" {
+  description = "The operating system type of the function app"
+  type        = string
+  default     = "Linux"
+}
