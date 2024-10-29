@@ -38,6 +38,9 @@ func TestFunctionAppModule(t *testing.T) {
 			"private_func_app": {
 				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
 			},
+			"windows_func_app": {
+				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
+			},
 		}).
 		Build()
 

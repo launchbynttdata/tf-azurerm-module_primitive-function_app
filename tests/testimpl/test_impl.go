@@ -17,7 +17,7 @@ import (
 )
 
 func TestFunctionApp(t *testing.T, ctx types.TestContext) {
-	ctx.EnabledOnlyForTests(t, "complete")
+	ctx.EnabledOnlyForTests(t, "complete", "windows_func_app")
 
 	subscriptionId := os.Getenv("ARM_SUBSCRIPTION_ID")
 	if len(subscriptionId) == 0 {
