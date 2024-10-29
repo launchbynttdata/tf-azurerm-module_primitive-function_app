@@ -21,6 +21,8 @@ data "azurerm_service_plan" "asp" {
 }
 
 resource "azurerm_linux_function_app" "func" {
+  count = lower(var.os_type) == "linux" ? 1 : 0
+
   name                = var.function_app_name
   resource_group_name = var.resource_group_name
   location            = var.location
@@ -38,7 +40,8 @@ resource "azurerm_linux_function_app" "func" {
 
   https_only = var.https_only
 
-  service_plan_id = data.azurerm_service_plan.asp.id
+  service_plan_id               = data.azurerm_service_plan.asp.id
+  public_network_access_enabled = var.public_network_access_enabled
 
   storage_account_name          = data.azurerm_storage_account.sa.name
   storage_uses_managed_identity = true
@@ -78,6 +81,72 @@ resource "azurerm_linux_function_app" "func" {
             registry_password = lookup(var.site_config.application_stack.docker, "registry_password", null)
           }
         }
+      }
+    }
+
+    dynamic "cors" {
+      for_each = (lookup(var.site_config, "cors", null) != null) ? ["cors"] : []
+      content {
+        allowed_origins     = var.site_config.cors.allowed_origins
+        support_credentials = lookup(var.site_config.cors, "support_credentials", null)
+      }
+    }
+
+    dynamic "ip_restriction" {
+      for_each = (lookup(var.site_config, "ip_restriction", null) != null) ? ["ip_restriction"] : []
+      content {
+        ip_address = var.site_config.ip_restriction.ip_address
+        action     = var.site_config.ip_restriction.action
+      }
+    }
+  }
+}
+
+resource "azurerm_windows_function_app" "windows_func" {
+
+  count = lower(var.os_type) == "windows" ? 1 : 0
+
+  location            = var.location
+  name                = var.function_app_name
+  resource_group_name = var.resource_group_name
+
+  storage_account_name          = data.azurerm_storage_account.sa.name
+  storage_uses_managed_identity = true
+
+  tags = var.tags
+
+  identity {
+    type         = var.identity_ids != null ? "UserAssigned" : "SystemAssigned"
+    identity_ids = var.identity_ids
+  }
+
+  app_settings = var.app_settings
+
+  functions_extension_version = var.functions_extension_version
+
+  https_only = var.https_only
+
+  service_plan_id               = data.azurerm_service_plan.asp.id
+  public_network_access_enabled = var.public_network_access_enabled
+
+  site_config {
+
+    always_on           = lookup(var.site_config, "always_on", null)
+    app_command_line    = lookup(var.site_config, "app_command_line", null)
+    app_scale_limit     = lookup(var.site_config, "app_scale_limit", null)
+    health_check_path   = lookup(var.site_config, "health_check_path", null)
+    http2_enabled       = lookup(var.site_config, "http2_enabled", null)
+    minimum_tls_version = lookup(var.site_config, "minimum_tls_version", null)
+
+    dynamic "application_stack" {
+      for_each = (lookup(var.site_config, "application_stack", null) != null) ? ["application_stack"] : []
+      content {
+        dotnet_version              = lookup(var.site_config.application_stack, "dotnet_version", null)
+        use_dotnet_isolated_runtime = lookup(var.site_config.application_stack, "use_dotnet_isolated_runtime", null)
+        java_version                = lookup(var.site_config.application_stack, "java_version", null)
+        node_version                = lookup(var.site_config.application_stack, "node_version", null)
+        powershell_core_version     = lookup(var.site_config.application_stack, "powershell_core_version", null)
+        use_custom_runtime          = lookup(var.site_config.application_stack, "use_custom_runtime", null)
       }
     }
 

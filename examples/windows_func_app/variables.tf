@@ -1,38 +1,117 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+variable "resource_names_map" {
+  description = "A map of key to resource_name that will be used by tf-launch-module_library-resource_name to generate resource names"
+  type = map(object({
+    name       = string
+    max_length = optional(number, 60)
+  }))
 
-variable "function_app_name" {
-  description = "Name of the function app to create"
-  type        = string
+  default = {
+    function_app = {
+      name       = "func"
+      max_length = 60
+    }
+    storage_account = {
+      name       = "sa"
+      max_length = 24
+    }
+    service_plan = {
+      name       = "asp"
+      max_length = 60
+    }
+    resource_group = {
+      name       = "rg"
+      max_length = 60
+    }
+  }
 }
 
-variable "service_plan_name" {
-  description = "Name of the service plan to create"
-  type        = string
+variable "instance_env" {
+  type        = number
+  description = "Number that represents the instance of the environment."
+  default     = 0
+
+  validation {
+    condition     = var.instance_env >= 0 && var.instance_env <= 999
+    error_message = "Instance number should be between 0 to 999."
+  }
 }
 
-variable "storage_account_name" {
-  description = "Name of the storage account to create"
-  type        = string
+variable "instance_resource" {
+  type        = number
+  description = "Number that represents the instance of the resource."
+  default     = 0
+
+  validation {
+    condition     = var.instance_resource >= 0 && var.instance_resource <= 100
+    error_message = "Instance number should be between 0 to 100."
+  }
 }
 
-variable "resource_group_name" {
-  description = "name of the resource group where the function app will be created"
+variable "logical_product_family" {
   type        = string
+  description = <<EOF
+    (Required) Name of the product family for which the resource is created.
+    Example: org_name, department_name.
+  EOF
+  nullable    = false
+
+  validation {
+    condition     = can(regex("^[_\\-A-Za-z0-9]+$", var.logical_product_family))
+    error_message = "The variable must contain letters, numbers, -, _, and .."
+  }
+
+  default = "launch"
+}
+
+variable "logical_product_service" {
+  type        = string
+  description = <<EOF
+    (Required) Name of the product service for which the resource is created.
+    For example, backend, frontend, middleware etc.
+  EOF
+  nullable    = false
+
+  validation {
+    condition     = can(regex("^[_\\-A-Za-z0-9]+$", var.logical_product_service))
+    error_message = "The variable must contain letters, numbers, -, _, and .."
+  }
+
+  default = "func"
+}
+
+variable "class_env" {
+  type        = string
+  description = "(Required) Environment where resource is going to be deployed. For example. dev, qa, uat"
+  nullable    = false
+  default     = "dev"
+
+  validation {
+    condition     = length(regexall("\\b \\b", var.class_env)) == 0
+    error_message = "Spaces between the words are not allowed."
+  }
 }
 
 variable "location" {
   description = "Location where the function app will be created"
   type        = string
+}
+
+variable "storage_account_tier" {
+  description = "The Tier to use for this storage account"
+  type        = string
+  default     = "Standard"
+}
+
+variable "storage_account_replication_type" {
+  description = "The Replication Type to use for this storage account"
+  type        = string
+  default     = "LRS"
+}
+
+variable "sku" {
+  description = "The SKU for the function app hosting plan"
+  type        = string
+  default     = "Y1"
 }
 
 variable "app_settings" {
@@ -65,8 +144,6 @@ variable "site_config" {
       always_on        = If this Linux Web App is Always On enabled. Defaults to false.
       app_command_line = The App command line to launch.
       app_scale_limit  = The number of workers this function app can scale out to. Only applicable to apps on the Consumption and Premium plan.
-      application_insights_connection_string = The connection string of the Application Insights instance to use.
-      application_insights_key               = The key of the Application Insights instance to use.
       application_stack = optional(object({
         docker = optional(object({
           image_name        = The name of the Docker image to use.
@@ -99,29 +176,17 @@ variable "site_config" {
     })
   EOF
   type = object({
-    always_on                              = optional(bool)
-    app_command_line                       = optional(string)
-    app_scale_limit                        = optional(number)
-    application_insights_connection_string = optional(string)
-    application_insights_key               = optional(string)
+    always_on        = optional(bool)
+    app_command_line = optional(string)
+    app_scale_limit  = optional(number)
     application_stack = optional(object({
-      docker = optional(object({
-        image_name        = string
-        image_tag         = string
-        registry_url      = optional(string)
-        registry_username = optional(string)
-        registry_password = optional(string)
-      }))
       dotnet_version              = optional(string)
       use_dotnet_isolated_runtime = optional(bool)
       java_version                = optional(string)
       node_version                = optional(string)
-      python_version              = optional(string)
       powershell_core_version     = optional(string)
       use_custom_runtime          = optional(bool)
     }))
-    container_registry_managed_identity_client_id = optional(string)
-    container_registry_use_managed_identity       = optional(bool)
     cors = optional(object({
       allowed_origins     = list(string)
       support_credentials = optional(bool)

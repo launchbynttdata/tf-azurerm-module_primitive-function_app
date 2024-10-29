@@ -12,20 +12,20 @@
 
 output "default_hostname" {
   description = "The default hostname for the function app"
-  value       = azurerm_linux_function_app.func.default_hostname
+  value       = lower(var.os_type) == "linux" ? azurerm_linux_function_app.func[0].default_hostname : azurerm_windows_function_app.windows_func[0].default_hostname
 }
 
 output "function_app_name" {
   description = "The name of the function app"
-  value       = azurerm_linux_function_app.func.name
+  value       = lower(var.os_type) == "linux" ? azurerm_linux_function_app.func[0].name : azurerm_windows_function_app.windows_func[0].name
 }
 
 output "function_app_id" {
   description = "The ID of the function app"
-  value       = azurerm_linux_function_app.func.id
+  value       = lower(var.os_type) == "linux" ? azurerm_linux_function_app.func[0].id : azurerm_windows_function_app.windows_func[0].id
 }
 
 output "principal_id" {
   description = "The principal ID of the function app"
-  value       = azurerm_linux_function_app.func.identity[0].principal_id
+  value       = lower(var.os_type) == "linux" ? azurerm_linux_function_app.func[0].identity[0].principal_id : azurerm_windows_function_app.windows_func[0].identity[0].principal_id
 }
