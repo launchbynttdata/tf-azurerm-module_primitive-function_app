@@ -73,7 +73,8 @@ module "function_app" {
   https_only                  = var.https_only
   site_config                 = var.site_config
 
-  identity_ids = var.identity_ids
+  identity                        = var.identity
+  key_vault_reference_identity_id = var.key_vault_reference_identity_id
 
   tags = merge(var.tags, { resource_name = module.resource_names["function_app"].standard })
 

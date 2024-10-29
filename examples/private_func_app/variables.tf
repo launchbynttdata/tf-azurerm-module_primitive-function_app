@@ -228,12 +228,27 @@ variable "site_config" {
   default = {}
 }
 
-variable "identity_ids" {
-  description = <<EOT
-    Specifies a list of user managed identity ids to be assigned.
-  EOT
-  type        = list(string)
+variable "identity" {
+  description = "(Optional) An identity block."
+  type = object({
+    type         = string
+    identity_ids = optional(list(string))
+  })
+  default = null
+  validation {
+    condition     = var.identity == null || can(contains(["SystemAssigned", "UserAssigned", "SystemAssigned, UserAssigned"], var.identity.type))
+    error_message = "identity.type must be one of SystemAssigned, UserAssigned, or SystemAssigned, UserAssigned."
+  }
+}
+
+variable "key_vault_reference_identity_id" {
+  description = "(Optional) The identity ID of the Key Vault reference. Required when identity.type is set to UserAssigned or SystemAssigned, UserAssigned."
+  type        = string
   default     = null
+  validation {
+    condition     = var.key_vault_reference_identity_id == null || can(regex("^[a-zA-Z0-9-/.]{2,255}$", var.key_vault_reference_identity_id))
+    error_message = "key_vault_reference_identity_id must be a valid azure resource identifier."
+  }
 }
 
 variable "tags" {

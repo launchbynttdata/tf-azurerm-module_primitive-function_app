@@ -30,3 +30,6 @@ app_settings = {
   "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
 }
 sku = "S1"
+identity = {
+  type = "SystemAssigned"
+}

@@ -17,3 +17,6 @@ logical_product_service       = "funcapp"
 class_env                     = "gotest"
 location                      = "eastus"
 public_network_access_enabled = true
+identity = {
+  type = "SystemAssigned"
+}

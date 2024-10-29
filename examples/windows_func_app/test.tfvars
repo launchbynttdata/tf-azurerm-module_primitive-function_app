@@ -6,3 +6,6 @@ class_env                     = "gotest"
 location                      = "eastus"
 public_network_access_enabled = true
 os_type                       = "Windows"
+identity = {
+  type = "SystemAssigned"
+}
