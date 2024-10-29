@@ -40,6 +40,10 @@ func TestFunctionAppModule(t *testing.T) {
 				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
 				"SKIP_TEST":                     false,
 			},
+			"windows_func_app": {
+				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
+				"SKIP_TEST":                     false,
+			},
 		}).
 		Build()
 
