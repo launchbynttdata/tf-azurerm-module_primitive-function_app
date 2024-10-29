@@ -180,23 +180,13 @@ variable "site_config" {
     app_command_line = optional(string)
     app_scale_limit  = optional(number)
     application_stack = optional(object({
-      docker = optional(object({
-        image_name        = string
-        image_tag         = string
-        registry_url      = optional(string)
-        registry_username = optional(string)
-        registry_password = optional(string)
-      }))
       dotnet_version              = optional(string)
       use_dotnet_isolated_runtime = optional(bool)
       java_version                = optional(string)
       node_version                = optional(string)
-      python_version              = optional(string)
       powershell_core_version     = optional(string)
       use_custom_runtime          = optional(bool)
     }))
-    container_registry_managed_identity_client_id = optional(string)
-    container_registry_use_managed_identity       = optional(bool)
     cors = optional(object({
       allowed_origins     = list(string)
       support_credentials = optional(bool)
