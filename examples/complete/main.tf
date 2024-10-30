@@ -52,6 +52,11 @@ module "storage_account" {
   depends_on = [module.resource_group]
 }
 
+data "azurerm_storage_account" "storage_account" {
+  name                = local.storage_account_name
+  resource_group_name = module.resource_group.name
+}
+
 module "app_service_plan" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/app_service_plan/azurerm"
   version = "~> 1.0"
@@ -72,9 +77,10 @@ module "app_service_plan" {
 module "function_app" {
   source = "../.."
 
-  function_app_name    = local.function_app_name
-  service_plan_name    = local.service_plan_name
-  storage_account_name = local.storage_account_name
+  function_app_name          = local.function_app_name
+  service_plan_name          = local.service_plan_name
+  storage_account_name       = local.storage_account_name
+  storage_account_access_key = data.azurerm_storage_account.storage_account.primary_access_key
 
   location                      = var.location
   resource_group_name           = module.resource_group.name

@@ -25,6 +25,12 @@ variable "storage_account_name" {
   type        = string
 }
 
+variable "storage_account_access_key" {
+  description = "Access key for the storage account"
+  type        = string
+  default     = null
+}
+
 variable "resource_group_name" {
   description = "name of the resource group where the function app will be created"
   type        = string

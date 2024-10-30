@@ -137,6 +137,7 @@ No modules.
 | <a name="input_function_app_name"></a> [function\_app\_name](#input\_function\_app\_name) | Name of the function app to create | `string` | n/a | yes |
 | <a name="input_service_plan_name"></a> [service\_plan\_name](#input\_service\_plan\_name) | Name of the service plan to create | `string` | n/a | yes |
 | <a name="input_storage_account_name"></a> [storage\_account\_name](#input\_storage\_account\_name) | Name of the storage account to create | `string` | n/a | yes |
+| <a name="input_storage_account_access_key"></a> [storage\_account\_access\_key](#input\_storage\_account\_access\_key) | Access key for the storage account | `string` | `null` | no |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | name of the resource group where the function app will be created | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Location where the function app will be created | `string` | n/a | yes |
 | <a name="input_app_settings"></a> [app\_settings](#input\_app\_settings) | Environment variables to set on the function app | `map(string)` | `{}` | no |
