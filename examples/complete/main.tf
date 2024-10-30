@@ -55,6 +55,7 @@ module "storage_account" {
 data "azurerm_storage_account" "storage_account" {
   name                = local.storage_account_name
   resource_group_name = module.resource_group.name
+  depends_on          = [module.storage_account]
 }
 
 module "app_service_plan" {
