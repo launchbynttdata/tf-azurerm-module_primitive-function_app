@@ -10,13 +10,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-instance_env                  = 0
-instance_resource             = 0
-logical_product_family        = "launch"
-logical_product_service       = "funcapp"
-class_env                     = "gotest"
-location                      = "eastus"
-public_network_access_enabled = true
-identity = {
-  type = "SystemAssigned"
+output "default_hostname" {
+  value = module.function_app.default_hostname
+}
+
+output "function_app_name" {
+  value = module.function_app.function_app_name
+}
+
+output "function_app_id" {
+  value = module.function_app.function_app_id
+}
+
+output "service_plan_name" {
+  value = module.app_service_plan.name
+}
+
+output "service_plan_id" {
+  value = module.app_service_plan.id
+}
+
+output "storage_account_id" {
+  description = "The id of the storage account"
+  value       = module.storage_account.id
 }

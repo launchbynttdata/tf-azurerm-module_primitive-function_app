@@ -92,21 +92,21 @@ module "function_app" {
   https_only                  = var.https_only
   site_config                 = var.site_config
 
-  identity                        = var.identity
-  key_vault_reference_identity_id = var.key_vault_reference_identity_id
+  identity                        = var.identity == null ? null : var.identity
+  key_vault_reference_identity_id = var.key_vault_reference_identity_id == null ? null : var.key_vault_reference_identity_id
 
   tags = merge(var.tags, { resource_name = module.resource_names["function_app"].standard })
 
   depends_on = [module.resource_group, module.storage_account, module.app_service_plan]
 }
 
-module "role_assignment" {
-  source  = "terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm"
-  version = "~> 1.0"
+# module "role_assignment" {
+#   source               = "terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm"
+#   version              = "~> 1.0"
+#   count                = var.identity == null ? 0 : 1
+#   scope                = module.storage_account.id
+#   role_definition_name = "Storage Blob Data Contributor"
+#   principal_id         = module.function_app.principal_id
 
-  scope                = module.storage_account.id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = module.function_app.principal_id
-
-  depends_on = [module.function_app]
-}
+#   depends_on = [module.function_app]
+# }

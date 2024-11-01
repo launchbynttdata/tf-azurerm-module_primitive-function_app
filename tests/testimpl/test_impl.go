@@ -3,17 +3,18 @@ package testimpl
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"os"
+	"strconv"
+	"testing"
+	"time"
+
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice"
 	"github.com/gruntwork-io/terratest/modules/retry"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/launchbynttdata/lcaf-component-terratest/types"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"os"
-	"strconv"
-	"testing"
-	"time"
 )
 
 func TestFunctionApp(t *testing.T, ctx types.TestContext) {
@@ -34,7 +35,7 @@ func TestFunctionApp(t *testing.T, ctx types.TestContext) {
 	assert.Equal(t, "200", status)
 }
 
-func TestPrivateFuncApp(t *testing.T, ctx types.TestContext) {
+func TestComposablePrivateFuncApp(t *testing.T, ctx types.TestContext) {
 	ctx.EnabledOnlyForTests(t, "private_func_app")
 
 	subscriptionId := os.Getenv("ARM_SUBSCRIPTION_ID")

@@ -16,20 +16,5 @@ logical_product_family        = "launch"
 logical_product_service       = "funcapp"
 class_env                     = "gotest"
 location                      = "eastus"
-public_network_access_enabled = false
-address_space                 = ["10.0.0.0/16"]
-subnets = {
-  subnet1 = {
-    name                                          = "subnet1"
-    prefix                                        = "10.0.1.0/24"
-    private_link_service_network_policies_enabled = true
-  }
-}
-app_settings = {
-  "FUNCTIONS_WORKER_RUNTIME"            = "dotnet"
-  "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
-}
-sku = "S1"
-identity = {
-  type = "SystemAssigned"
-}
+public_network_access_enabled = true
+identity                      = null

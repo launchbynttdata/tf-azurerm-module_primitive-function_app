@@ -29,10 +29,15 @@ resource "azurerm_linux_function_app" "func" {
 
   tags = var.tags
 
-  identity {
-    type         = var.identity_ids != null ? "UserAssigned" : "SystemAssigned"
-    identity_ids = var.identity_ids
+  dynamic "identity" {
+    iterator = identity
+    for_each = try(var.identity[*], [])
+    content {
+      type         = identity.value.type
+      identity_ids = lookup(identity.value, "identity_ids", null)
+    }
   }
+  key_vault_reference_identity_id = var.key_vault_reference_identity_id
 
   app_settings = var.app_settings
 
@@ -44,7 +49,8 @@ resource "azurerm_linux_function_app" "func" {
   public_network_access_enabled = var.public_network_access_enabled
 
   storage_account_name          = data.azurerm_storage_account.sa.name
-  storage_uses_managed_identity = true
+  storage_uses_managed_identity = var.storage_account_access_key == null ? true : null
+  storage_account_access_key    = var.storage_account_access_key == null ? null : var.storage_account_access_key
 
   site_config {
     always_on                                     = lookup(var.site_config, "always_on", null)
@@ -100,6 +106,9 @@ resource "azurerm_linux_function_app" "func" {
       }
     }
   }
+  lifecycle {
+    ignore_changes = [app_settings]
+  }
 }
 
 resource "azurerm_windows_function_app" "windows_func" {
@@ -111,14 +120,20 @@ resource "azurerm_windows_function_app" "windows_func" {
   resource_group_name = var.resource_group_name
 
   storage_account_name          = data.azurerm_storage_account.sa.name
-  storage_uses_managed_identity = true
+  storage_uses_managed_identity = var.storage_account_access_key == null ? true : null
+  storage_account_access_key    = var.storage_account_access_key == null ? null : var.storage_account_access_key
 
   tags = var.tags
 
-  identity {
-    type         = var.identity_ids != null ? "UserAssigned" : "SystemAssigned"
-    identity_ids = var.identity_ids
+  dynamic "identity" {
+    iterator = identity
+    for_each = try(var.identity[*], [])
+    content {
+      type         = identity.value.type
+      identity_ids = lookup(identity.value, "identity_ids", null)
+    }
   }
+  key_vault_reference_identity_id = var.key_vault_reference_identity_id
 
   app_settings = var.app_settings
 
@@ -131,12 +146,14 @@ resource "azurerm_windows_function_app" "windows_func" {
 
   site_config {
 
-    always_on           = lookup(var.site_config, "always_on", null)
-    app_command_line    = lookup(var.site_config, "app_command_line", null)
-    app_scale_limit     = lookup(var.site_config, "app_scale_limit", null)
-    health_check_path   = lookup(var.site_config, "health_check_path", null)
-    http2_enabled       = lookup(var.site_config, "http2_enabled", null)
-    minimum_tls_version = lookup(var.site_config, "minimum_tls_version", null)
+    always_on                              = lookup(var.site_config, "always_on", null)
+    app_command_line                       = lookup(var.site_config, "app_command_line", null)
+    app_scale_limit                        = lookup(var.site_config, "app_scale_limit", null)
+    application_insights_connection_string = lookup(var.site_config, "application_insights_connection_string", null)
+    application_insights_key               = lookup(var.site_config, "application_insights_key", null)
+    health_check_path                      = lookup(var.site_config, "health_check_path", null)
+    http2_enabled                          = lookup(var.site_config, "http2_enabled", null)
+    minimum_tls_version                    = lookup(var.site_config, "minimum_tls_version", null)
 
     dynamic "application_stack" {
       for_each = (lookup(var.site_config, "application_stack", null) != null) ? ["application_stack"] : []
@@ -165,5 +182,8 @@ resource "azurerm_windows_function_app" "windows_func" {
         action     = var.site_config.ip_restriction.action
       }
     }
+  }
+  lifecycle {
+    ignore_changes = [app_settings]
   }
 }

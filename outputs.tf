@@ -27,5 +27,5 @@ output "function_app_id" {
 
 output "principal_id" {
   description = "The principal ID of the function app"
-  value       = lower(var.os_type) == "linux" ? azurerm_linux_function_app.func[0].identity[0].principal_id : azurerm_windows_function_app.windows_func[0].identity[0].principal_id
+  value       = lower(var.os_type) == "linux" ? (can(azurerm_linux_function_app.func[0].identity[0].principal_id) ? azurerm_linux_function_app.func[0].identity[0].principal_id : null) : (can(azurerm_windows_function_app.windows_func[0].identity[0].principal_id) ? azurerm_windows_function_app.windows_func[0].identity[0].principal_id : null)
 }

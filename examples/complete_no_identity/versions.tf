@@ -10,13 +10,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-instance_env                  = 0
-instance_resource             = 0
-logical_product_family        = "launch"
-logical_product_service       = "funcapp"
-class_env                     = "gotest"
-location                      = "eastus"
-public_network_access_enabled = true
-identity = {
-  type = "SystemAssigned"
+terraform {
+  required_version = "~> 1.0"
+
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~>3.113"
+    }
+  }
 }

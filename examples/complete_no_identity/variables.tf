@@ -34,10 +34,6 @@ variable "resource_names_map" {
       name       = "rg"
       max_length = 60
     }
-    virtual_network = {
-      name       = "funcapp"
-      max_length = 60
-    }
   }
 }
 
@@ -234,12 +230,9 @@ variable "identity" {
     type         = string
     identity_ids = optional(list(string))
   })
-  default = {
-    type         = "SystemAssigned"
-    identity_ids = null
-  }
+  default = null
   validation {
-    condition     = can(contains(["SystemAssigned", "UserAssigned", "SystemAssigned, UserAssigned"], var.identity.type))
+    condition     = var.identity == null || can(contains(["SystemAssigned", "UserAssigned", "SystemAssigned, UserAssigned"], var.identity.type))
     error_message = "identity.type must be one of SystemAssigned, UserAssigned, or SystemAssigned, UserAssigned."
   }
 }
@@ -256,30 +249,5 @@ variable "key_vault_reference_identity_id" {
 
 variable "tags" {
   type    = map(string)
-  default = {}
-}
-
-## variables for virtual network
-
-variable "address_space" {
-  type        = list(string)
-  default     = ["10.6.0.0/16"]
-  description = "The address space that is used by the virtual network."
-}
-
-variable "subnets" {
-  description = "A mapping of subnet names to their configurations."
-  type = map(object({
-    prefix = string
-    delegation = optional(map(object({
-      service_name    = string
-      service_actions = list(string)
-    })), {})
-    service_endpoints                             = optional(list(string), []),
-    private_endpoint_network_policies_enabled     = optional(bool, false)
-    private_link_service_network_policies_enabled = optional(bool, false)
-    network_security_group_id                     = optional(string, null)
-    route_table_id                                = optional(string, null)
-  }))
   default = {}
 }
