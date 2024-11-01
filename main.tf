@@ -107,9 +107,7 @@ resource "azurerm_linux_function_app" "func" {
     }
   }
   lifecycle {
-    ignore_changes = [
-      app_settings,
-    ]
+    ignore_changes = [app_settings]
   }
 }
 
