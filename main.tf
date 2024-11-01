@@ -106,6 +106,11 @@ resource "azurerm_linux_function_app" "func" {
       }
     }
   }
+  lifecycle {
+    ignore_changes = [
+      app_settings,
+    ]
+  }
 }
 
 resource "azurerm_windows_function_app" "windows_func" {
