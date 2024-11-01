@@ -44,5 +44,5 @@ func TestFunctionAppModule(t *testing.T) {
 		}).
 		Build()
 
-	lib.RunNonDestructiveTest(t, *ctx, testimpl.TestPrivateFuncApp)
+	lib.RunNonDestructiveTest(t, *ctx, testimpl.TestComposablePrivateFuncApp)
 }

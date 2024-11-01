@@ -208,9 +208,12 @@ variable "identity" {
     type         = string
     identity_ids = optional(list(string))
   })
-  default = null
+  default = {
+    type         = "SystemAssigned"
+    identity_ids = null
+  }
   validation {
-    condition     = var.identity == null || can(contains(["SystemAssigned", "UserAssigned", "SystemAssigned, UserAssigned"], var.identity.type))
+    condition     = can(contains(["SystemAssigned", "UserAssigned", "SystemAssigned, UserAssigned"], var.identity.type))
     error_message = "identity.type must be one of SystemAssigned, UserAssigned, or SystemAssigned, UserAssigned."
   }
 }

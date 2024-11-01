@@ -36,6 +36,10 @@ func TestFunctionAppModule(t *testing.T) {
 				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
 				"SKIP_TEST":                     true,
 			},
+			"complete_no_identity": {
+				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
+				"SKIP_TEST":                     true,
+			},
 			"private_func_app": {
 				"IS_TERRAFORM_IDEMPOTENT_APPLY": false,
 				"SKIP_TEST":                     false,
@@ -47,5 +51,5 @@ func TestFunctionAppModule(t *testing.T) {
 		}).
 		Build()
 
-	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestFunctionApp, testimpl.TestPrivateFuncApp)
+	lib.RunSetupTestTeardown(t, *ctx, testimpl.TestFunctionApp, testimpl.TestComposablePrivateFuncApp)
 }
