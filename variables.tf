@@ -179,6 +179,11 @@ variable "key_vault_reference_identity_id" {
   }
 }
 
+variable "virtual_network_subnet_id" {
+  description = "(Optional) The ID of the subnet to place the function app in."
+  type        = string
+  default     = null
+}
 variable "tags" {
   type    = map(string)
   default = {}

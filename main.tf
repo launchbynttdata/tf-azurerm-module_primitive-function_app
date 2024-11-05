@@ -51,6 +51,7 @@ resource "azurerm_linux_function_app" "func" {
   storage_account_name          = data.azurerm_storage_account.sa.name
   storage_uses_managed_identity = var.storage_account_access_key == null ? true : null
   storage_account_access_key    = var.storage_account_access_key == null ? null : var.storage_account_access_key
+  virtual_network_subnet_id     = var.virtual_network_subnet_id == null ? null : var.virtual_network_subnet_id
 
   site_config {
     always_on                                     = lookup(var.site_config, "always_on", null)
@@ -139,6 +140,7 @@ resource "azurerm_windows_function_app" "windows_func" {
   storage_account_name          = data.azurerm_storage_account.sa.name
   storage_uses_managed_identity = var.storage_account_access_key == null ? true : null
   storage_account_access_key    = var.storage_account_access_key == null ? null : var.storage_account_access_key
+  virtual_network_subnet_id     = var.virtual_network_subnet_id == null ? null : var.virtual_network_subnet_id
 
   tags = var.tags
 
