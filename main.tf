@@ -51,6 +51,7 @@ resource "azurerm_linux_function_app" "func" {
   storage_account_name          = data.azurerm_storage_account.sa.name
   storage_uses_managed_identity = var.storage_account_access_key == null ? true : null
   storage_account_access_key    = var.storage_account_access_key == null ? null : var.storage_account_access_key
+  virtual_network_subnet_id     = var.virtual_network_subnet_id == null ? null : var.virtual_network_subnet_id
 
   site_config {
     always_on                                     = lookup(var.site_config, "always_on", null)
@@ -63,6 +64,8 @@ resource "azurerm_linux_function_app" "func" {
     health_check_path                             = lookup(var.site_config, "health_check_path", null)
     http2_enabled                                 = lookup(var.site_config, "http2_enabled", null)
     minimum_tls_version                           = lookup(var.site_config, "minimum_tls_version", null)
+    ip_restriction_default_action                 = lookup(var.site_config, "ip_restriction_default_action", null)
+    scm_use_main_ip_restriction                   = lookup(var.site_config, "scm_use_main_ip_restriction", null)
 
     dynamic "application_stack" {
       for_each = (lookup(var.site_config, "application_stack", null) != null) ? ["application_stack"] : []
@@ -99,10 +102,25 @@ resource "azurerm_linux_function_app" "func" {
     }
 
     dynamic "ip_restriction" {
-      for_each = (lookup(var.site_config, "ip_restriction", null) != null) ? ["ip_restriction"] : []
+      iterator = ip_restriction
+      for_each = try(var.site_config.ip_restriction[*], [])
       content {
-        ip_address = var.site_config.ip_restriction.ip_address
-        action     = var.site_config.ip_restriction.action
+        action                    = lookup(ip_restriction.value, "action", null)
+        ip_address                = lookup(ip_restriction.value, "ip_address", null)
+        name                      = lookup(ip_restriction.value, "name", null)
+        priority                  = lookup(ip_restriction.value, "priority", null)
+        service_tag               = lookup(ip_restriction.value, "service_tag", null)
+        virtual_network_subnet_id = lookup(ip_restriction.value, "virtual_network_subnet_id", null)
+        dynamic "headers" {
+          iterator = headers
+          for_each = try(ip_restriction.value["headers"][*], [])
+          content {
+            x_azure_fdid      = lookup(headers.value, "x_azure_fdid", null)
+            x_fd_health_probe = lookup(headers.value, "x_fd_health_probe", null)
+            x_forwarded_for   = lookup(headers.value, "x_forwarded_for", null)
+            x_forwarded_host  = lookup(headers.value, "x_forwarded_host", null)
+          }
+        }
       }
     }
   }
@@ -122,6 +140,7 @@ resource "azurerm_windows_function_app" "windows_func" {
   storage_account_name          = data.azurerm_storage_account.sa.name
   storage_uses_managed_identity = var.storage_account_access_key == null ? true : null
   storage_account_access_key    = var.storage_account_access_key == null ? null : var.storage_account_access_key
+  virtual_network_subnet_id     = var.virtual_network_subnet_id == null ? null : var.virtual_network_subnet_id
 
   tags = var.tags
 
@@ -154,6 +173,9 @@ resource "azurerm_windows_function_app" "windows_func" {
     health_check_path                      = lookup(var.site_config, "health_check_path", null)
     http2_enabled                          = lookup(var.site_config, "http2_enabled", null)
     minimum_tls_version                    = lookup(var.site_config, "minimum_tls_version", null)
+    ip_restriction_default_action          = lookup(var.site_config, "ip_restriction_default_action", null)
+    scm_use_main_ip_restriction            = lookup(var.site_config, "scm_use_main_ip_restriction", null)
+    vnet_route_all_enabled                 = lookup(var.site_config, "vnet_route_all_enabled", null)
 
     dynamic "application_stack" {
       for_each = (lookup(var.site_config, "application_stack", null) != null) ? ["application_stack"] : []
@@ -176,10 +198,25 @@ resource "azurerm_windows_function_app" "windows_func" {
     }
 
     dynamic "ip_restriction" {
-      for_each = (lookup(var.site_config, "ip_restriction", null) != null) ? ["ip_restriction"] : []
+      iterator = ip_restriction
+      for_each = try(var.site_config.ip_restriction[*], [])
       content {
-        ip_address = var.site_config.ip_restriction.ip_address
-        action     = var.site_config.ip_restriction.action
+        action                    = lookup(ip_restriction.value, "action", null)
+        ip_address                = lookup(ip_restriction.value, "ip_address", null)
+        name                      = lookup(ip_restriction.value, "name", null)
+        priority                  = lookup(ip_restriction.value, "priority", null)
+        service_tag               = lookup(ip_restriction.value, "service_tag", null)
+        virtual_network_subnet_id = lookup(ip_restriction.value, "virtual_network_subnet_id", null)
+        dynamic "headers" {
+          iterator = headers
+          for_each = try(ip_restriction.value["headers"][*], [])
+          content {
+            x_azure_fdid      = lookup(headers.value, "x_azure_fdid", null)
+            x_fd_health_probe = lookup(headers.value, "x_fd_health_probe", null)
+            x_forwarded_for   = lookup(headers.value, "x_forwarded_for", null)
+            x_forwarded_host  = lookup(headers.value, "x_forwarded_host", null)
+          }
+        }
       }
     }
   }

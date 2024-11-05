@@ -132,11 +132,24 @@ variable "site_config" {
       allowed_origins     = list(string)
       support_credentials = optional(bool)
     }))
-    health_check_path = optional(string)
-    http2_enabled     = optional(bool)
+    health_check_path             = optional(string)
+    http2_enabled                 = optional(bool)
+    ip_restriction_default_action = optional(string)
+    scm_use_main_ip_restriction   = optional(bool)
+    vnet_route_all_enabled        = optional(bool)
     ip_restriction = optional(list(object({
-      ip_address = string
-      action     = string
+      ip_address                = optional(string)
+      action                    = string
+      name                      = optional(string)
+      priority                  = optional(number)
+      service_tag               = optional(string)
+      virtual_network_subnet_id = optional(string)
+      headers = optional(list(object({
+        x_forwarded_for   = optional(string)
+        x_forwarded_host  = optional(string)
+        x_fd_health_probe = optional(string)
+        x_azure_fdid      = optional(list(string))
+      })))
     })))
     minimum_tls_version = optional(string)
   })
@@ -166,6 +179,11 @@ variable "key_vault_reference_identity_id" {
   }
 }
 
+variable "virtual_network_subnet_id" {
+  description = "(Optional) The ID of the subnet to place the function app in."
+  type        = string
+  default     = null
+}
 variable "tags" {
   type    = map(string)
   default = {}

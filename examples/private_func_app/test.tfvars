@@ -33,3 +33,31 @@ sku = "S1"
 identity = {
   type = "SystemAssigned"
 }
+site_config = {
+  ip_restriction_default_action = "Deny"
+  scm_use_main_ip_restriction   = true
+  ip_restriction = [{
+    action     = "Allow"
+    name       = "default-allow-app-subnet"
+    priority   = "100000"
+    ip_address = "10.10.0.0/24"
+    },
+    {
+      action     = "Allow"
+      name       = "default-allow-vnet-integration-subnet"
+      priority   = "100001"
+      ip_address = "10.10.1.0/24"
+    },
+    {
+      action     = "Allow"
+      name       = "default-allow-vmss-subnet"
+      priority   = "100002"
+      ip_address = "10.10.2.0/24"
+    },
+    {
+      action     = "Allow"
+      name       = "default-allow-camp-jump-box-subnet"
+      priority   = "100003"
+      ip_address = "10.10.3.0/24"
+  }]
+}
