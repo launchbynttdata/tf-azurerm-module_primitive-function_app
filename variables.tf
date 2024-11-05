@@ -136,6 +136,7 @@ variable "site_config" {
     http2_enabled                 = optional(bool)
     ip_restriction_default_action = optional(string)
     scm_use_main_ip_restriction   = optional(bool)
+    vnet_route_all_enabled        = optional(bool)
     ip_restriction = optional(list(object({
       ip_address                = optional(string)
       action                    = string

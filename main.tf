@@ -173,6 +173,7 @@ resource "azurerm_windows_function_app" "windows_func" {
     minimum_tls_version                    = lookup(var.site_config, "minimum_tls_version", null)
     ip_restriction_default_action          = lookup(var.site_config, "ip_restriction_default_action", null)
     scm_use_main_ip_restriction            = lookup(var.site_config, "scm_use_main_ip_restriction", null)
+    vnet_route_all_enabled                 = lookup(var.site_config, "vnet_route_all_enabled", null)
 
     dynamic "application_stack" {
       for_each = (lookup(var.site_config, "application_stack", null) != null) ? ["application_stack"] : []
