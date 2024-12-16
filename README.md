@@ -115,7 +115,64 @@ If `make check` target is successful, developer is good to commit the code to pr
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.116.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.117.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [azurerm_linux_function_app.func](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_function_app) | resource |
+| [azurerm_windows_function_app.windows_func](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_function_app) | resource |
+| [azurerm_service_plan.asp](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/service_plan) | data source |
+| [azurerm_storage_account.sa](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_function_app_name"></a> [function\_app\_name](#input\_function\_app\_name) | Name of the function app to create | `string` | n/a | yes |
+| <a name="input_service_plan_name"></a> [service\_plan\_name](#input\_service\_plan\_name) | Name of the service plan to create | `string` | n/a | yes |
+| <a name="input_storage_account_name"></a> [storage\_account\_name](#input\_storage\_account\_name) | Name of the storage account to create | `string` | n/a | yes |
+| <a name="input_storage_account_access_key"></a> [storage\_account\_access\_key](#input\_storage\_account\_access\_key) | Access key for the storage account | `string` | `null` | no |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | name of the resource group where the function app will be created | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Location where the function app will be created | `string` | n/a | yes |
+| <a name="input_app_settings"></a> [app\_settings](#input\_app\_settings) | Environment variables to set on the function app | `map(string)` | `{}` | no |
+| <a name="input_functions_extension_version"></a> [functions\_extension\_version](#input\_functions\_extension\_version) | The version of the Azure Functions runtime to use | `string` | `"~4"` | no |
+| <a name="input_https_only"></a> [https\_only](#input\_https\_only) | If true, the function app will only accept HTTPS requests | `bool` | `true` | no |
+| <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled) | If true, the function app will be accessible from the public internet | `bool` | `true` | no |
+| <a name="input_site_config"></a> [site\_config](#input\_site\_config) | object({<br>  always\_on        = If this Linux Web App is Always On enabled. Defaults to false.<br>  app\_command\_line = The App command line to launch.<br>  app\_scale\_limit  = The number of workers this function app can scale out to. Only applicable to apps on the Consumption and Premium plan.<br>  application\_insights\_connection\_string = The connection string of the Application Insights instance to use.<br>  application\_insights\_key               = The key of the Application Insights instance to use.<br>  application\_stack = optional(object({<br>    docker = optional(object({<br>      image\_name        = The name of the Docker image to use.<br>      image\_tag         = The image tag of the image to use.<br>      registry\_url      = The URL of the docker registry.<br>      registry\_username = The username to use for connections to the registry.<br>      registry\_password = The password for the account to use to connect to the registry.<br>    }))<br>    dotnet\_version              = optional(string)<br>    use\_dotnet\_isolated\_runtime = optional(bool)<br>    java\_version                = optional(string)<br>    node\_version                = optional(string)<br>    python\_version              = optional(string)<br>    powershell\_core\_version     = optional(string)<br>    use\_custom\_runtime          = optional(bool)<br>  }))<br>  container\_registry\_managed\_identity\_client\_id = The Client ID of the Managed Service Identity to use for connections to the Azure Container Registry.<br>  container\_registry\_use\_managed\_identity       = Should connections for Azure Container Registry use Managed Identity.<br>  cors = optional(object({<br>    allowed\_origins     = list(string)<br>    support\_credentials = optional(bool)<br>  }))<br>  health\_check\_path = The path to be checked for this function app health.<br>  http2\_enabled     = Specifies if the HTTP2 protocol should be enabled. Defaults to false.<br>  ip\_restriction = optional(list(object({<br>    ip\_address = The CIDR notation of the IP or IP Range to match.<br>    action     = The action to take. Possible values are Allow or Deny. Defaults to Allow.<br>  })))<br>  minimum\_tls\_version = The configures the minimum version of TLS required for SSL requests. Defaults to '1.2'<br>}) | <pre>object({<br>    always_on                              = optional(bool)<br>    app_command_line                       = optional(string)<br>    app_scale_limit                        = optional(number)<br>    application_insights_connection_string = optional(string)<br>    application_insights_key               = optional(string)<br>    application_stack = optional(object({<br>      docker = optional(object({<br>        image_name        = string<br>        image_tag         = string<br>        registry_url      = optional(string)<br>        registry_username = optional(string)<br>        registry_password = optional(string)<br>      }))<br>      dotnet_version              = optional(string)<br>      use_dotnet_isolated_runtime = optional(bool)<br>      java_version                = optional(string)<br>      node_version                = optional(string)<br>      python_version              = optional(string)<br>      powershell_core_version     = optional(string)<br>      use_custom_runtime          = optional(bool)<br>    }))<br>    container_registry_managed_identity_client_id = optional(string)<br>    container_registry_use_managed_identity       = optional(bool)<br>    cors = optional(object({<br>      allowed_origins     = list(string)<br>      support_credentials = optional(bool)<br>    }))<br>    health_check_path             = optional(string)<br>    http2_enabled                 = optional(bool)<br>    ip_restriction_default_action = optional(string)<br>    scm_use_main_ip_restriction   = optional(bool)<br>    vnet_route_all_enabled        = optional(bool)<br>    ip_restriction = optional(list(object({<br>      ip_address                = optional(string)<br>      action                    = string<br>      name                      = optional(string)<br>      priority                  = optional(number)<br>      service_tag               = optional(string)<br>      virtual_network_subnet_id = optional(string)<br>      headers = optional(list(object({<br>        x_forwarded_for   = optional(string)<br>        x_forwarded_host  = optional(string)<br>        x_fd_health_probe = optional(string)<br>        x_azure_fdid      = optional(list(string))<br>      })))<br>    })))<br>    minimum_tls_version = optional(string)<br>  })</pre> | `{}` | no |
+| <a name="input_identity"></a> [identity](#input\_identity) | (Optional) An identity block. | <pre>object({<br>    type         = string<br>    identity_ids = optional(list(string))<br>  })</pre> | `null` | no |
+| <a name="input_key_vault_reference_identity_id"></a> [key\_vault\_reference\_identity\_id](#input\_key\_vault\_reference\_identity\_id) | (Optional) The identity ID of the Key Vault reference. Required when identity.type is set to UserAssigned or SystemAssigned, UserAssigned. | `string` | `null` | no |
+| <a name="input_virtual_network_subnet_id"></a> [virtual\_network\_subnet\_id](#input\_virtual\_network\_subnet\_id) | (Optional) The ID of the subnet to place the function app in. | `string` | `null` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(string)` | `{}` | no |
+| <a name="input_os_type"></a> [os\_type](#input\_os\_type) | The operating system type of the function app | `string` | `"Linux"` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_default_hostname"></a> [default\_hostname](#output\_default\_hostname) | The default hostname for the function app |
+| <a name="output_function_app_name"></a> [function\_app\_name](#output\_function\_app\_name) | The name of the function app |
+| <a name="output_function_app_id"></a> [function\_app\_id](#output\_function\_app\_id) | The ID of the function app |
+| <a name="output_principal_id"></a> [principal\_id](#output\_principal\_id) | The principal ID of the function app |
+<!-- END_TF_DOCS -->
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~>3.113 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.117.0 |
 
 ## Modules
 
