@@ -12,12 +12,12 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_app_service_plan"></a> [app\_service\_plan](#module\_app\_service\_plan) | terraform.registry.launch.nttdata.com/module_primitive/app_service_plan/azurerm | ~> 2.4 |
+| <a name="module_app_service_plan"></a> [app\_service\_plan](#module\_app\_service\_plan) | terraform.registry.launch.nttdata.com/module_primitive/app_service_plan/azurerm | ~> 1.1 |
 | <a name="module_function_app"></a> [function\_app](#module\_function\_app) | ../.. | n/a |
-| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 2.4 |
+| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform.registry.launch.nttdata.com/module_primitive/resource_group/azurerm | ~> 1.0 |
 | <a name="module_resource_names"></a> [resource\_names](#module\_resource\_names) | terraform.registry.launch.nttdata.com/module_library/resource_name/launch | ~> 2.0 |
-| <a name="module_role_assignment"></a> [role\_assignment](#module\_role\_assignment) | terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm | ~> 2.4 |
-| <a name="module_storage_account"></a> [storage\_account](#module\_storage\_account) | terraform.registry.launch.nttdata.com/module_primitive/storage_account/azurerm | ~> 2.4 |
+| <a name="module_role_assignment"></a> [role\_assignment](#module\_role\_assignment) | terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm | ~> 1.3 |
+| <a name="module_storage_account"></a> [storage\_account](#module\_storage\_account) | terraform.registry.launch.nttdata.com/module_primitive/storage_account/azurerm | ~> 1.4 |
 | <a name="module_virtual_network"></a> [virtual\_network](#module\_virtual\_network) | terraform.registry.launch.nttdata.com/module_primitive/virtual_network/azurerm | ~> 3.0 |
 
 ## Resources
