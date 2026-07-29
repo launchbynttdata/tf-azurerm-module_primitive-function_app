@@ -10,6 +10,7 @@ module "resource_names" {
   class_env               = var.class_env
   cloud_resource_type     = each.value.name
   instance_env            = var.instance_env
+  instance_resource       = var.instance_resource
   maximum_length          = each.value.max_length
 }
 
@@ -25,7 +26,7 @@ module "resource_group" {
 
 module "storage_account" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/storage_account/azurerm"
-  version = "~> 1.0"
+  version = "~> 1.4"
 
   storage_account_name = local.storage_account_name
   resource_group_name  = module.resource_group.name
@@ -42,7 +43,7 @@ module "storage_account" {
 
 module "app_service_plan" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/app_service_plan/azurerm"
-  version = "~> 1.0"
+  version = "~> 1.1"
 
   name                = local.service_plan_name
   resource_group_name = module.resource_group.name
@@ -83,7 +84,7 @@ module "function_app" {
 
 module "role_assignment" {
   source  = "terraform.registry.launch.nttdata.com/module_primitive/role_assignment/azurerm"
-  version = "~> 1.0"
+  version = "~> 1.3"
 
   scope                = module.storage_account.id
   role_definition_name = "Storage Blob Data Contributor"
