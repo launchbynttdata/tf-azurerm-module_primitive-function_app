@@ -25,9 +25,9 @@ func TestFunctionApp(t *testing.T, ctx types.TestContext) {
 		t.Fatal("ARM_SUBSCRIPTION_ID environment variable is not set")
 	}
 
-	functionAppHostname := terraform.Output(t, ctx.TerratestTerraformOptions(), "default_hostname")
+	functionAppHostname := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "default_hostname")
 
-	status := retry.DoWithRetry(t, "Check if the function app is up and running", 6, 10*time.Second, func() (string, error) {
+	status := retry.DoWithRetryContext(t, t.Context(), "Check if the function app is up and running", 6, 10*time.Second, func() (string, error) {
 		res, err := http.Get(fmt.Sprintf("https://%s", functionAppHostname))
 		return strconv.FormatInt(int64(res.StatusCode), 10), err
 	})
@@ -54,9 +54,9 @@ func TestComposablePrivateFuncApp(t *testing.T, ctx types.TestContext) {
 	}
 
 	t.Run("TestDefaultHostName", func(t *testing.T) {
-		defaultHostname := terraform.Output(t, ctx.TerratestTerraformOptions(), "default_hostname")
-		resourceGroupName := terraform.Output(t, ctx.TerratestTerraformOptions(), "resource_group_name")
-		funcAppName := terraform.Output(t, ctx.TerratestTerraformOptions(), "function_app_name")
+		defaultHostname := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "default_hostname")
+		resourceGroupName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "resource_group_name")
+		funcAppName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "function_app_name")
 
 		azureFuncApp, err := funcAppClient.Get(context.Background(), resourceGroupName, funcAppName, nil)
 		if err != nil {
@@ -67,9 +67,9 @@ func TestComposablePrivateFuncApp(t *testing.T, ctx types.TestContext) {
 
 	t.Run("TestFunctionAppID", func(t *testing.T) {
 
-		resourceGroupName := terraform.Output(t, ctx.TerratestTerraformOptions(), "resource_group_name")
-		funcAppName := terraform.Output(t, ctx.TerratestTerraformOptions(), "function_app_name")
-		functionAppID := terraform.Output(t, ctx.TerratestTerraformOptions(), "function_app_id")
+		resourceGroupName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "resource_group_name")
+		funcAppName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "function_app_name")
+		functionAppID := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "function_app_id")
 
 		azureFuncApp, err := funcAppClient.Get(context.Background(), resourceGroupName, funcAppName, nil)
 		if err != nil {
@@ -79,9 +79,9 @@ func TestComposablePrivateFuncApp(t *testing.T, ctx types.TestContext) {
 	})
 
 	t.Run("TestFuncAppUrl", func(t *testing.T) {
-		funcAppUrl := terraform.Output(t, ctx.TerratestTerraformOptions(), "function_app_url")
-		resourceGroupName := terraform.Output(t, ctx.TerratestTerraformOptions(), "resource_group_name")
-		funcAppName := terraform.Output(t, ctx.TerratestTerraformOptions(), "function_app_name")
+		funcAppUrl := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "function_app_url")
+		resourceGroupName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "resource_group_name")
+		funcAppName := terraform.OutputContext(t, context.Background(), ctx.TerratestTerraformOptions(), "function_app_name")
 
 		azureFuncApp, err := funcAppClient.Get(context.Background(), resourceGroupName, funcAppName, nil)
 		if err != nil {
